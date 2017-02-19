@@ -43,6 +43,7 @@ def webhook():
                     #       change to on "get started" button press instead later
                     if message_text == "begin":
                         send_message(sender_id, "Begin flow here")
+                        is_buyer(sender_id)
                     else:
                         send_message(sender_id, "got it, thanks!")
 
