@@ -106,8 +106,9 @@ def handle_init(uid, value):
         else:
             incomplete_data[uid]["where"] = set([value])
 
+        # TODO: figure out better way of doing this loop
         # all dining halls or picked none
-        if len(incomplete_data[uid]["where"]) == 4 or value == "done":
+        if len(incomplete_data[uid]["where"]) == 4:
             # init_begin()
             print "TODO: get times now"
         else:
@@ -157,7 +158,8 @@ def init_location(recipient_id):
         "attachment": {
             "type": "template",
             "payload": {
-                "template_type":"generic",
+                "template_type":"list",
+                "top_element_style":"compact",
                 "elements":[
                     {
                         "title": "Add dining hall",
@@ -168,24 +170,45 @@ def init_location(recipient_id):
                                 "type": "postback",
                                 "title": "Bruin Plate",
                                 "payload": "init:bplate"
-                            },{
+                            }
+                        ]
+
+                    },{
+                        "title": "Add dining hall",
+                        "subtitle": "Which dining hall are you buying/selling at?",
+                        "buttons":
+                        [
+                            {
                                 "type": "postback",
                                 "title": "Feast",
                                 "payload": "init:feast"
-                            },{
+                            }
+                        ]
+
+                    },{
+                        "title": "Add dining hall",
+                        "subtitle": "Which dining hall are you buying/selling at?",
+                        "buttons":
+                        [
+                            {
                                 "type": "postback",
                                 "title": "De Neve",
                                 "payload": "init:deneve"
-                            },{
+                            }
+                        ]
+
+                    },{
+                        "title": "Add dining hall",
+                        "subtitle": "Which dining hall are you buying/selling at?",
+                        "buttons":
+                        [
+                            {
                                 "type": "postback",
                                 "title": "Covel",
                                 "payload": "init:covel"
-                            },{
-                                "type": "postback",
-                                "title": "Done",
-                                "payload": "init:done"
                             }
                         ]
+
                     }
                 ]
             }
@@ -193,7 +216,6 @@ def init_location(recipient_id):
     }
 
     send_message(recipient_id, message_obj)
-
 
 def send_message(recipient_id, message_obj):
 
