@@ -7,6 +7,15 @@ from flask import Flask, request
 
 app = Flask(__name__)
 
+# User Data Structure:
+# { user_id:
+#   { "buyer": bool, - False = seller
+#     "begin": <beginning time>,
+#     "end": <ending time> - integer on the hour
+#     "where": ["bplate", "deneve", "covel", "feast"] - contains one or more dining halls
+#   }
+# }
+data = {}
 
 @app.route('/', methods=['GET'])
 def verify():
@@ -45,17 +54,22 @@ def webhook():
                     else:
                         send_message(sender_id, "Got a message!")
 
-                if messaging_event.get("delivery"):  # delivery confirmation
-                    pass
-
-                if messaging_event.get("optin"):  # optin confirmation
-                    pass
-
                 if messaging_event.get("postback"):  # user clicked/tapped "postback" button in earlier message
                     payload = messaging_event["postback"]["payload"]
-                    send_message(sender_id, "Received Postback payload: " + payload)
+
+                    handle_payload(recipient_id, playload)
 
     return "ok", 200
+
+# handles payload string from postback
+def handle_payload(uid, payload):
+    log("Received Postback payload from {id}: {load}".format(id=uid, load=payload))
+
+    if payload == "buyer" or payload == "seller":
+        data[uid] = {"buyer": payload == "buyer"}
+        log(data)
+    else:
+        send_message(uid, "Received unhandled payload")
 
 # sends a templated question to recipient asking if buyer or seller
 def is_buyer(recipient_id):
