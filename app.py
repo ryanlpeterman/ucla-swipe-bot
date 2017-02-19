@@ -4,6 +4,7 @@ import json
 
 import requests
 from flask import Flask, request
+from collections import defaultdict
 
 app = Flask(__name__)
 
@@ -12,10 +13,16 @@ app = Flask(__name__)
 #   { "buyer": bool, - False = seller
 #     "begin": <beginning time>,
 #     "end": <ending time> - integer on the hour
-#     "where": ["bplate", "deneve", "covel", "feast"] - contains one or more dining halls
+#     "where": set("bplate", "deneve", "covel", "feast") - contains one or more dining halls
 #   }
 # }
-data = {}
+
+# User has not filled out all fields yet
+incomplete_data = defaultdict(dict)
+# User has fully filled out fields and we can match on this data
+final_data = defaultdict(dict)
+
+dining_halls = ["bplate", "deneve", "feast", "covel"]
 
 @app.route('/', methods=['GET'])
 def verify():
@@ -28,98 +35,163 @@ def verify():
 
     return "Hello world", 200
 
-
+# endpoint for processing incoming messaging events
 @app.route('/', methods=['POST'])
 def webhook():
 
-    # endpoint for processing incoming messaging events
-
     data = request.get_json()
-    log(data)  # you may not want to log every incoming message in production, but it's good for testing
+    # for testing
+    log(data)
 
     if data["object"] == "page":
 
         for entry in data["entry"]:
             for messaging_event in entry["messaging"]:
-                log("Received Event!")
-                sender_id = messaging_event["sender"]["id"]        # the facebook ID of the person sending you the message
-                recipient_id = messaging_event["recipient"]["id"]  # the recipient's ID, which should be your page's facebook ID
+
+                # the facebook ID of the person sending you the message
+                sender_id = messaging_event["sender"]["id"]
+                # the recipient's ID, which should be your page's facebook ID
+                recipient_id = messaging_event["recipient"]["id"]
+
                 if messaging_event.get("message"):  # someone sent us a message
                     message_text = messaging_event["message"]["text"]  # the message's text
 
                     # TODO: temporarily starts data request save on begin msg send
                     #       change to on "get started" button press instead later
                     if message_text.lower() == "begin":
-                        is_buyer(sender_id)
+                        init_user(sender_id)
                     else:
                         send_message(sender_id, "Got a message!")
 
                 if messaging_event.get("postback"):  # user clicked/tapped "postback" button in earlier message
                     payload = messaging_event["postback"]["payload"]
-
                     handle_payload(recipient_id, payload)
 
     return "ok", 200
 
 # handles payload string from postback
+# payloads are in the form
+#   <action>:<value>
+# i.e.
+#   set:buyer
+#   init:buyer
 def handle_payload(uid, payload):
     log("Received Postback payload from {id}: {load}".format(id=uid, load=payload))
 
-    if payload == "buyer" or payload == "seller":
-        data[uid] = {"buyer": payload == "buyer"}
-        log(data)
+    action, value = payload.split(":")
+
+    if action == "init":
+        log("Handle Init with payload: {load}".format(load=payload))
+        handle_init(uid, value)
+    elif action == "set":
+        log("TODO: implement setting finalized data")
     else:
-        send_message(uid, "Received unhandled payload")
+        log("Received unhandled payload: {load}".format(load=payload))
+
+# handles initializing incomplete data in init flow
+def handle_init(uid, value):
+    if value == "buyer" or value == "seller":
+        incomplete_data[uid]["buyer"] = (buyer == "buyer")
+        init_location(uid)
+
+    elif value in dining_halls:
+        if incomplete_data[uid]["where"]:
+            incomplete_data[uid]["where"].add(value)
+
+        # no locations set yet
+        else:
+            incomplete_data[uid]["where"] = set([value])
+
+        # all dining halls or picked none
+        if len(incomplete_data[uid]["where"]) == 4 or value == "done":
+            # init_begin()
+            print "TODO: get times now"
+        else:
+            init_location(uid)
+    else:
+        #TODO: Handle storing when
+        print "TODO: store when"
 
 # sends a templated question to recipient asking if buyer or seller
-def is_buyer(recipient_id):
-    log("ask if buyer to {recipient}".format(recipient=recipient_id))
+def init_user(recipient_id):
+    log("init:buyer from {recipient}".format(recipient=recipient_id))
 
-    params = {
-        "access_token": os.environ["PAGE_ACCESS_TOKEN"]
-    }
-    headers = {
-        "Content-Type": "application/json"
-    }
-    data = json.dumps({
-        "recipient": {
-            "id": recipient_id
-        },
-        "message": {
-            "attachment": {
-                "type": "template",
-                "payload": {
-                    "template_type":"generic",
-                    "elements":[
-                        {
-                            "title": "Let's get started!",
-                            "subtitle": "Are you a buyer or a seller?",
-                            "buttons":
-                            [
-                                {
-                                    "type": "postback",
-                                    "title": "Buyer",
-                                    "payload": "buyer"
-                                },{
-                                    "type": "postback",
-                                    "title": "Seller",
-                                    "payload": "seller"
-                                }
-                            ]
-                        }
-                    ]
-                }
+    message_obj = {
+        "attachment": {
+            "type": "template",
+            "payload": {
+                "template_type":"generic",
+                "elements":[
+                    {
+                        "title": "Let's get started!",
+                        "subtitle": "Are you a buyer or a seller?",
+                        "buttons":
+                        [
+                            {
+                                "type": "postback",
+                                "title": "Buyer",
+                                "payload": "init:buyer"
+                            },{
+                                "type": "postback",
+                                "title": "Seller",
+                                "payload": "init:seller"
+                            }
+                        ]
+                    }
+                ]
             }
         }
-    })
+    }
 
-    r = requests.post("https://graph.facebook.com/v2.6/me/messages", params=params, headers=headers, data=data)
-    if r.status_code != 200:
-        log(r.status_code)
-        log(r.text)
+    send_message(recipient_id, message_obj)
+
+# sends a templated question to recipient asking for which dining halls they prefer
+def init_location(recipient_id):
+    log("init:location from {recipient}".format(recipient=recipient_id))
+
+    message_obj = {
+        "attachment": {
+            "type": "template",
+            "payload": {
+                "template_type":"generic",
+                "elements":[
+                    {
+                        "title": "Add dining hall",
+                        "subtitle": "Which dining hall are you buying/selling at?",
+                        "buttons":
+                        [
+                            {
+                                "type": "postback",
+                                "title": "Bruin Plate",
+                                "payload": "init:bplate"
+                            },{
+                                "type": "postback",
+                                "title": "Feast",
+                                "payload": "init:feast"
+                            },{
+                                "type": "postback",
+                                "title": "De Neve",
+                                "payload": "init:deneve"
+                            },{
+                                "type": "postback",
+                                "title": "Covel",
+                                "payload": "init:covel"
+                            },{
+                                "type": "postback",
+                                "title": "Done",
+                                "payload": "init:done"
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
+    }
+
+    send_message(recipient_id, message_obj)
 
 
-def send_message(recipient_id, message_text):
+def send_message(recipient_id, message_obj):
 
     log("sending message to {recipient}: {text}".format(recipient=recipient_id, text=message_text))
 
@@ -134,7 +206,7 @@ def send_message(recipient_id, message_text):
             "id": recipient_id
         },
         "message": {
-            "text": message_text
+            "text": message_obj
         }
     })
     r = requests.post("https://graph.facebook.com/v2.6/me/messages", params=params, headers=headers, data=data)
@@ -142,11 +214,10 @@ def send_message(recipient_id, message_text):
         log(r.status_code)
         log(r.text)
 
-
-def log(message):  # simple wrapper for logging to stdout on heroku
+# simple wrapper for logging to stdout on heroku
+def log(message):
     print str(message)
     sys.stdout.flush()
-
 
 if __name__ == '__main__':
     app.run(debug=True)
