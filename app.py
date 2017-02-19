@@ -61,7 +61,8 @@ def webhook():
                     if message_text.lower() == "begin":
                         init_user(sender_id)
                     else:
-                        send_message(sender_id, "Got a message!")
+                        obj = {"text": "Got a message!"}
+                        send_message(sender_id, obj)
 
                 if messaging_event.get("postback"):  # user clicked/tapped "postback" button in earlier message
                     payload = messaging_event["postback"]["payload"]
@@ -205,9 +206,7 @@ def send_message(recipient_id, message_obj):
         "recipient": {
             "id": recipient_id
         },
-        "message": {
-            "text": message_obj
-        }
+        "message": message_obj
     })
     r = requests.post("https://graph.facebook.com/v2.6/me/messages", params=params, headers=headers, data=data)
     if r.status_code != 200:
