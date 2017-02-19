@@ -162,49 +162,45 @@ def init_location(recipient_id):
                 "top_element_style":"compact",
                 "elements":[
                     {
-                        "title": "Add dining hall",
-                        "subtitle": "Which dining hall are you buying/selling at?",
+                        "title": "Which dining halls are you buying/selling at?\nBruin Plate",
                         "buttons":
                         [
                             {
                                 "type": "postback",
-                                "title": "Bruin Plate",
+                                "title": "Add",
                                 "payload": "init:bplate"
                             }
                         ]
 
                     },{
-                        "title": "Add dining hall",
-                        "subtitle": "Which dining hall are you buying/selling at?",
+                        "title": "Feast",
                         "buttons":
                         [
                             {
                                 "type": "postback",
-                                "title": "Feast",
+                                "title": "Add",
                                 "payload": "init:feast"
                             }
                         ]
 
                     },{
-                        "title": "Add dining hall",
-                        "subtitle": "Which dining hall are you buying/selling at?",
+                        "title": "De Neve",
                         "buttons":
                         [
                             {
                                 "type": "postback",
-                                "title": "De Neve",
+                                "title": "Add",
                                 "payload": "init:deneve"
                             }
                         ]
 
                     },{
-                        "title": "Add dining hall",
-                        "subtitle": "Which dining hall are you buying/selling at?",
+                        "title": "Covel",
                         "buttons":
                         [
                             {
                                 "type": "postback",
-                                "title": "Covel",
+                                "title": "Add",
                                 "payload": "init:covel"
                             }
                         ]
