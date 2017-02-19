@@ -92,7 +92,7 @@ def handle_payload(uid, payload):
 # handles initializing incomplete data in init flow
 def handle_init(uid, value):
     if value == "buyer" or value == "seller":
-        incomplete_data[uid]["buyer"] = (buyer == "buyer")
+        incomplete_data[uid]["buyer"] = (value == "buyer")
         init_location(uid)
 
     elif value in dining_halls:
