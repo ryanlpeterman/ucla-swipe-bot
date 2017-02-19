@@ -193,7 +193,7 @@ def init_location(recipient_id):
 
 def send_message(recipient_id, message_obj):
 
-    log("sending message to {recipient}: {text}".format(recipient=recipient_id, text=message_text))
+    log("sending message to {recipient}".format(recipient=recipient_id))
 
     params = {
         "access_token": os.environ["PAGE_ACCESS_TOKEN"]
