@@ -54,7 +54,8 @@ def webhook():
                     pass
 
                 if messaging_event.get("postback"):  # user clicked/tapped "postback" button in earlier message
-                    pass
+                    payload = messaging_event["postback"]["payload"]
+                    send_message(sender_id, "Received Postback payload: " + payload)
 
     return "ok", 200
 
@@ -80,10 +81,8 @@ def is_buyer(recipient_id):
                     "elements":[
                         {
                             "title": "Let's get started!",
-                            "image_url": "http://www.collegerank.net/wp-content/uploads/2016/03/7.-University_of_California_Los_Angeles_Dining_Halls.jpg",
-                            "subtitle": "Are you a buyer or a seller?"
-                        },
-                        {"buttons":
+                            "subtitle": "Are you a buyer or a seller?",
+                            "buttons":
                             [
                                 {
                                     "type": "postback",
