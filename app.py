@@ -66,7 +66,7 @@ def webhook():
 
                 if messaging_event.get("postback"):  # user clicked/tapped "postback" button in earlier message
                     payload = messaging_event["postback"]["payload"]
-                    handle_payload(recipient_id, payload)
+                    handle_payload(sender_id, payload)
 
     return "ok", 200
 
@@ -77,7 +77,7 @@ def webhook():
 #   set:buyer
 #   init:buyer
 def handle_payload(uid, payload):
-    log("Received Postback payload from {id}: {load}".format(id=uid, load=payload))
+    log("Received postback payload from {id}: {load}".format(id=uid, load=payload))
 
     action, value = payload.split(":")
 
