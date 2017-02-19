@@ -154,8 +154,7 @@ def init_location(recipient_id):
         "attachment": {
             "type": "template",
             "payload": {
-                "template_type":"list",
-                "top_element_style":"compact",
+                "template_type":"generic",
                 "elements":[
                     {
                         "title": "Which dining halls are you buying/selling at?",
@@ -165,25 +164,12 @@ def init_location(recipient_id):
                                 "type": "postback",
                                 "title": "Bruin Plate",
                                 "payload": "init:bplate"
-                            }
-                        ]
-
-                    },{
-                        "title": "",
-                        "buttons":
-                        [
+                            },
                             {
                                 "type": "postback",
                                 "title": "Feast",
                                 "payload": "init:feast"
-                            }
-                        ]
-
-                    },{
-                        "title": "",
-                        "buttons":
-                        [
-                            {
+                            },{
                                 "type": "postback",
                                 "title": "De Neve",
                                 "payload": "init:deneve"
@@ -191,7 +177,7 @@ def init_location(recipient_id):
                         ]
 
                     },{
-                        "title": "",
+                        "title": "Which dining halls are you buying/selling at?",
                         "buttons":
                         [
                             {
@@ -200,7 +186,6 @@ def init_location(recipient_id):
                                 "payload": "init:covel"
                             }
                         ]
-
                     }
                 ]
             }
