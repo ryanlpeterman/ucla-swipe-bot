@@ -106,6 +106,9 @@ def handle_init(uid, value):
         else:
             incomplete_data[uid]["where"] = set([value])
 
+        if len(incomplete_data[uid]["where"]) == 4:
+            log("User has all dining halls set")
+
     else:
         #TODO: Handle storing when
         print "TODO: store when"
@@ -155,45 +158,45 @@ def init_location(recipient_id):
                 "top_element_style":"compact",
                 "elements":[
                     {
-                        "title": "Which dining halls are you buying/selling at?\nBruin Plate",
+                        "title": "Which dining halls are you buying/selling at?",
                         "buttons":
                         [
                             {
                                 "type": "postback",
-                                "title": "Add",
+                                "title": "Bruin Plate",
                                 "payload": "init:bplate"
                             }
                         ]
 
                     },{
-                        "title": "Feast",
+                        "title": "",
                         "buttons":
                         [
                             {
                                 "type": "postback",
-                                "title": "Add",
+                                "title": "Feast",
                                 "payload": "init:feast"
                             }
                         ]
 
                     },{
-                        "title": "De Neve",
+                        "title": "",
                         "buttons":
                         [
                             {
                                 "type": "postback",
-                                "title": "Add",
+                                "title": "De Neve",
                                 "payload": "init:deneve"
                             }
                         ]
 
                     },{
-                        "title": "Covel",
+                        "title": "",
                         "buttons":
                         [
                             {
                                 "type": "postback",
-                                "title": "Add",
+                                "title": "Covel",
                                 "payload": "init:covel"
                             }
                         ]
