@@ -99,20 +99,13 @@ def handle_init(uid, value):
         init_location(uid)
 
     elif value in dining_halls:
-        if incomplete_data[uid]["where"]:
+        if "where" in incomplete_data[uid]:
             incomplete_data[uid]["where"].add(value)
 
         # no locations set yet
         else:
             incomplete_data[uid]["where"] = set([value])
 
-        # TODO: figure out better way of doing this loop
-        # all dining halls or picked none
-        if len(incomplete_data[uid]["where"]) == 4:
-            # init_begin()
-            print "TODO: get times now"
-        else:
-            init_location(uid)
     else:
         #TODO: Handle storing when
         print "TODO: store when"
