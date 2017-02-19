@@ -157,7 +157,7 @@ def init_location(recipient_id):
                 "template_type":"generic",
                 "elements":[
                     {
-                        "title": "Which dining halls are you buying/selling at? (swipe right to see more options",
+                        "title": "Which dining halls are you buying/selling at? (swipe right)",
                         "buttons":
                         [
                             {
