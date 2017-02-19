@@ -79,7 +79,9 @@ def is_buyer(recipient_id):
                     "template_type":"generic",
                     "elements":[
                         {
-                            "title": "Are you a buyer or a seller?"
+                            "title": "Let's get started!",
+                            "image_url": "http://www.collegerank.net/wp-content/uploads/2016/03/7.-University_of_California_Los_Angeles_Dining_Halls.jpg",
+                            "subtitle": "Are you a buyer or a seller?"
                         },
                         {"buttons":
                             [
