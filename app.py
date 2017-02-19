@@ -54,6 +54,9 @@ def webhook():
                 recipient_id = messaging_event["recipient"]["id"]
 
                 if messaging_event.get("message"):  # someone sent us a message
+                    # skip message if its an emoji
+                    if "text" not in messaging_event["message"]:
+                        continue
                     message_text = messaging_event["message"]["text"]  # the message's text
 
                     # TODO: temporarily starts data request save on begin msg send
