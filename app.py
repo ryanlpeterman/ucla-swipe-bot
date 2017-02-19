@@ -157,15 +157,14 @@ def init_location(recipient_id):
                 "template_type":"generic",
                 "elements":[
                     {
-                        "title": "Which dining halls are you buying/selling at?",
+                        "title": "Which dining halls are you buying/selling at? (swipe right to see more options",
                         "buttons":
                         [
                             {
                                 "type": "postback",
                                 "title": "Bruin Plate",
                                 "payload": "init:bplate"
-                            },
-                            {
+                            },{
                                 "type": "postback",
                                 "title": "Feast",
                                 "payload": "init:feast"
@@ -184,6 +183,14 @@ def init_location(recipient_id):
                                 "type": "postback",
                                 "title": "Covel",
                                 "payload": "init:covel"
+                            },{
+                                "type": "postback",
+                                "title": "Bruin Cafe",
+                                "payload": "init:bcafe"
+                            },{
+                                "type": "postback",
+                                "title": "Cafe 1919",
+                                "payload": "init:1919"
                             }
                         ]
                     }
