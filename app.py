@@ -112,6 +112,7 @@ def handle_init(uid, value):
     else:
         #TODO: Handle storing when
         print "TODO: store when"
+    log(incomplete_data)
 
 # sends a templated question to recipient asking if buyer or seller
 def init_user(recipient_id):
