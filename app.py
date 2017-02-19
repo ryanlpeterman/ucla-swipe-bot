@@ -42,7 +42,7 @@ def webhook():
                     # TODO: temporarily starts data request save on begin msg send
                     #       change to on "get started" button press instead later
                     if message_text == "begin":
-                        send_message(sender_id, "Begin flow here");
+                        send_message(sender_id, "Begin flow here")
                     else:
                         send_message(sender_id, "got it, thanks!")
 
@@ -56,6 +56,53 @@ def webhook():
                     pass
 
     return "ok", 200
+
+# sends a templated question to recipient asking if buyer or seller
+def is_buyer(recipient_id):
+    log("ask if buyer to {recipient}".format(recipient=recipient_id))
+
+    params = {
+        "access_token": os.environ["PAGE_ACCESS_TOKEN"]
+    }
+    headers = {
+        "Content-Type": "application/json"
+    }
+    data = json.dumps({
+        "recipient": {
+            "id": recipient_id
+        },
+        "message": {
+            "attachment": {
+                "type": "template",
+                "payload": {
+                    "template_type":"generic",
+                    "elements":[
+                        {
+                            "title": "Are you a buyer or a seller?"
+                        },
+                        {"buttons":
+                            [
+                                {
+                                    "type": "postback",
+                                    "title": "Buyer",
+                                    "payload": "DEVELOPER_DEFINED_PAYLOAD"
+                                },{
+                                    "type": "postback",
+                                    "title": "Seller",
+                                    "payload": "DEVELOPER_DEFINED_PAYLOAD"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        }
+    })
+
+    r = requests.post("https://graph.facebook.com/v2.6/me/messages", params=params, headers=headers, data=data)
+    if r.status_code != 200:
+        log(r.status_code)
+        log(r.text)
 
 
 def send_message(recipient_id, message_text):
