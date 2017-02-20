@@ -42,7 +42,13 @@ def setup_time():
                         "title": "Pick Times",
                         "subtitle" : "Swipe right to navigate. Add as many time periods as you like.",
                         "image_url" : "https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Icons8_flat_clock.svg/2000px-Icons8_flat_clock.svg.png"
-
+                        "buttons" : [
+                            {
+                                "type": "postback",
+                                "title": "Done Adding Times",
+                                "payload": "GOTO:DONE"
+                            }
+                        ]
                     },{
                         "title": "Breakfast Times",
                         "subtitle" : "Can you wake up in time?",
