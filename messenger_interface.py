@@ -68,15 +68,15 @@ def setup_time():
                             {
                                 "type": "postback",
                                 "title": "Add 11am-12pm",
-                                "payload": "ADD:11"
+                                "payload": "TIME:11"
                             },{
                                 "type": "postback",
                                 "title": "Add 12-1pm",
-                                "payload": "ADD:12"
+                                "payload": "TIME:12"
                             },{
                                 "type": "postback",
                                 "title": "Add 1-2pm",
-                                "payload": "ADD:1"
+                                "payload": "TIME:1"
                             }
                         ]
                     },{
@@ -86,15 +86,15 @@ def setup_time():
                             {
                                 "type": "postback",
                                 "title": "Add 5-6pm",
-                                "payload": "ADD:17"
+                                "payload": "TIME:17"
                             },{
                                 "type": "postback",
                                 "title": "Add 6-7pm",
-                                "payload": "ADD:18"
+                                "payload": "TIME:18"
                             },{
                                 "type": "postback",
                                 "title": "Add 7-8pm",
-                                "payload": "ADD:19"
+                                "payload": "TIME:19"
                             }
                         ]
                     }
@@ -132,7 +132,7 @@ def init_location():
                             {
                                 "type": "postback",
                                 "title": "Add Bplate",
-                                "payload": "ADD:BPLATE"
+                                "payload": "HALL:BPLATE"
                             }
                         ]
                     },{
@@ -143,7 +143,7 @@ def init_location():
                             {
                                 "type": "postback",
                                 "title": "Add De Neve",
-                                "payload": "ADD:DENEVE"
+                                "payload": "HALL:DENEVE"
                             }
                         ]
                     },{
@@ -154,7 +154,7 @@ def init_location():
                             {
                                 "type": "postback",
                                 "title": "Add Feast",
-                                "payload": "ADD:FEAST"
+                                "payload": "HALL:FEAST"
                             }
                         ]
                     },{
@@ -165,7 +165,7 @@ def init_location():
                             {
                                 "type": "postback",
                                 "title": "Add Covel",
-                                "payload": "ADD:COVEL"
+                                "payload": "HALL:COVEL"
                             }
                         ]
                     }

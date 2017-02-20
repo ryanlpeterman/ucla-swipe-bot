@@ -86,7 +86,7 @@ def handle_payload(uid, payload):
 
     action, value = payload.split(":")
 
-    if action == "ADD":
+    if action == "HALL":
         add_hall(uid, value)
 
     elif action == "BUYER":
