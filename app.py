@@ -23,8 +23,6 @@ incomplete_data = defaultdict(dict)
 # User has fully filled out fields and we can match on this data
 final_data = defaultdict(dict)
 
-dining_halls = ["bplate", "deneve", "feast", "covel"]
-
 @app.route('/', methods=['GET'])
 def verify():
     # when the endpoint is registered as a webhook, it must echo back
@@ -106,11 +104,36 @@ def handle_payload(uid, payload):
             fb.send_message(uid, fb.setup_time())
         elif value == "HALL":
             fb.send_message(uid, fb.init_location())
+        elif value == "DONE":
+            usr = incomplete_data[uid]
+
+            # user gave complete data
+            if "when" in usr and "where" in usr and "buyer" in usr:
+                # add object to complete dict
+                complete_data[uid] = incomplete_data[uid]
+                del incomplete_data[uid]
+
+                fb.send_message(uid, fb.setup_str("Great! I will try my best to match you and let you know if I find someone!"))
+                log(complete_data)
+
+            else:
+                fb.send_message(uid, fb.setup_str("I don't have the complete information necessary to match you, please fill out the following forms"))
+
+                if "where" not in usr:
+                    fb.send_message(uid, fb.init_location())
+                if "when" not in usr:
+                    fb.send_message(uid, fb.setup_time())
+                if "buyer" not in usr:
+                    fb.send_message(uid, fb.init_user())
 
     else:
         log("Received unhandled payload: {load}".format(load=payload))
 
 # TODO: Replace these functions and the global objects with a proper database
+def is_user_complete(uid):
+    usr = incomplete_data[uid]
+    return ()
+
 def set_buyer(uid, buyer_str):
     incomplete_data[uid]["buyer"] = (buyer_str == "buyer")
     log("USER: {id} was set to {buyer}".format(id=uid, buyer=buyer_str))
