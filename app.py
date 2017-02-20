@@ -96,7 +96,7 @@ def handle_payload(uid, payload):
 
         # if we have no dining hall data
         if "where" not in incomplete_data[uid]:
-            fb.send_message(self.my_uid, fb.init_location())
+            fb.send_message(uid, fb.init_location())
 
     # TODO: Convert to NLP to prompt user for time data
     elif action == "BEGIN":
@@ -109,7 +109,7 @@ def handle_payload(uid, payload):
         if value == "TIME":
             fb.send_message(sender_id, fb.setup_str("TODO: Ask for time"))
         elif value == "HALL":
-            fb.send_message(self.my_uid, fb.init_location())
+            fb.send_message(uid, fb.init_location())
 
     else:
         log("Received unhandled payload: {load}".format(load=payload))
