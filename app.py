@@ -112,7 +112,7 @@ def handle_payload(uid, payload):
 
 # TODO: Replace these functions and the global objects with a proper database
 def set_buyer(uid, buyer_str):
-    incomplete_data[uid]["buyer"] = (value == "buyer")
+    incomplete_data[uid]["buyer"] = (buyer_str == "buyer")
     log("USER: {id} was set to {buyer}".format(id=uid, buyer=buyer_str))
 
 def add_hall(uid, hall):
