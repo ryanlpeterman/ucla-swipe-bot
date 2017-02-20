@@ -13,8 +13,7 @@ app = Flask(__name__)
 # User Data Structure:
 # { user_id:
 #   { "buyer": bool, - False = seller
-#     "begin": <beginning time>,
-#     "end": <ending time> - integer on the hour
+#     "when" : set(1, 2, 3) - contains each hour in military time that they are buying
 #     "where": set("bplate", "deneve", "covel", "feast") - contains one or more dining halls
 #   }
 # }
@@ -91,34 +90,32 @@ def handle_payload(uid, payload):
         add_hall(uid, value)
 
     elif action == "BUYER":
-        incomplete_data[uid]["buyer"] = (value == "buyer")
-        log("USER: {id}, was set as a {buyer}".format(id=uid, buyer=value))
+        set_buyer(uid, value)
 
         # if we have no dining hall data
         if "where" not in incomplete_data[uid]:
             fb.send_message(uid, fb.init_location())
 
     # TODO: Convert to NLP to prompt user for time data
-    elif action == "BEGIN":
-        set_begin(uid, int(value))
-    elif action == "END":
-        set_end(uid, int(value))
+    elif action == "TIME":
+        add_time(uid, int(value))
 
     # use this postback action to resend prompts
     elif action == "GOTO":
         if value == "TIME":
-            fb.send_message(sender_id, fb.setup_str("TODO: Ask for time"))
+            fb.send_message(uid, fb.setup_str("TODO: Ask for time"))
         elif value == "HALL":
             fb.send_message(uid, fb.init_location())
 
     else:
         log("Received unhandled payload: {load}".format(load=payload))
 
-
 # TODO: Replace these functions and the global objects with a proper database
-def add_hall(uid, hall):
-    log("Adding {hall} to user {id}".format(hall=hall, id=uid))
+def set_buyer(uid, buyer_str):
+    incomplete_data[uid]["buyer"] = (value == "buyer")
+    log("USER: {id} was set to {buyer}".format(id=uid, buyer=buyer_str))
 
+def add_hall(uid, hall):
     if "where" in incomplete_data[uid]:
         incomplete_data[uid]["where"].add(hall)
 
@@ -126,13 +123,17 @@ def add_hall(uid, hall):
     else:
         incomplete_data[uid]["where"] = set([hall])
 
-# TODO
-def set_begin(uid, begin):
-    pass
+    log("Added location {hall} to user {id}".format(hall=hall, id=uid))
 
-# TODO
-def set_end(uid, end):
-    pass
+def add_time(uid, hour):
+    if "when" in incomplete_data[uid]:
+        incomplete_data[uid]["when"].add(hour)
+
+    # no locations set yet
+    else:
+        incomplete_data[uid]["when"] = set([hour])
+
+    log("Added time {hour} to user {id}".format(hour=hour, id=uid))
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -19,5 +19,9 @@ class TestMessengerInterface(unittest.TestCase):
         res_code = fb.send_message(self.my_uid, fb.init_location())
         self.assertEqual(res_code, 200)
 
+    def test_send_time_question(self):
+        res_code = fb.send_message(self.my_uid, fb.setup_time())
+        self.assertEqual(res_code, 200)
+
 if __name__ == '__main__':
     unittest.main()

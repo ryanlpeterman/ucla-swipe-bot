@@ -30,6 +30,81 @@ def send_message(recipient_id, message_obj):
 def setup_str(msg):
     return {"text":msg}
 
+# returns json object containing time prompt payload
+def setup_time():
+    message_obj = {
+        "attachment": {
+            "type": "template",
+            "payload": {
+                "template_type":"generic",
+                "elements":[
+                    {
+                        "title": "Pick Times",
+                        "subtitle" : "Swipe right to navigate. Add as many time periods as you like.",
+                        "image_url" : "https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Icons8_flat_clock.svg/2000px-Icons8_flat_clock.svg.png"
+
+                    },{
+                        "title": "Breakfast Times",
+                        "subtitle" : "Can you wake up in time?",
+                        "buttons" : [
+                            {
+                                "type": "postback",
+                                "title": "Add 8-9am",
+                                "payload": "TIME:8"
+                            },{
+                                "type": "postback",
+                                "title": "Add 9-10am",
+                                "payload": "TIME:9"
+                            },{
+                                "type": "postback",
+                                "title": "Add 10-11am",
+                                "payload": "TIME:10"
+                            }
+                        ]
+                    },{
+                        "title": "Lunch Times",
+                        "subtitle" : "Pick times for lunch",
+                        "buttons" : [
+                            {
+                                "type": "postback",
+                                "title": "Add 11am-12pm",
+                                "payload": "ADD:11"
+                            },{
+                                "type": "postback",
+                                "title": "Add 12-1pm",
+                                "payload": "ADD:12"
+                            },{
+                                "type": "postback",
+                                "title": "Add 1-2pm",
+                                "payload": "ADD:1"
+                            }
+                        ]
+                    },{
+                        "title": "Dinner Times",
+                        "subtitle" : "Pick times for dinner",
+                        "buttons" : [
+                            {
+                                "type": "postback",
+                                "title": "Add 5-6pm",
+                                "payload": "ADD:17"
+                            },{
+                                "type": "postback",
+                                "title": "Add 6-7pm",
+                                "payload": "ADD:18"
+                            },{
+                                "type": "postback",
+                                "title": "Add 7-8pm",
+                                "payload": "ADD:19"
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
+    }
+
+    return message_obj
+
 # sets up payload for location question
 def init_location():
     message_obj = {
@@ -44,7 +119,7 @@ def init_location():
                         "buttons" : [
                             {
                                 "type": "postback",
-                                "title": "Done",
+                                "title": "Done Adding Halls",
                                 "payload": "GOTO:TIME"
                             }
                         ]
@@ -56,7 +131,7 @@ def init_location():
                         "buttons" : [
                             {
                                 "type": "postback",
-                                "title": "Add",
+                                "title": "Add Bplate",
                                 "payload": "ADD:BPLATE"
                             }
                         ]
@@ -67,7 +142,7 @@ def init_location():
                         "buttons" : [
                             {
                                 "type": "postback",
-                                "title": "Add",
+                                "title": "Add De Neve",
                                 "payload": "ADD:DENEVE"
                             }
                         ]
@@ -78,7 +153,7 @@ def init_location():
                         "buttons" : [
                             {
                                 "type": "postback",
-                                "title": "Add",
+                                "title": "Add Feast",
                                 "payload": "ADD:FEAST"
                             }
                         ]
@@ -89,7 +164,7 @@ def init_location():
                         "buttons" : [
                             {
                                 "type": "postback",
-                                "title": "Add",
+                                "title": "Add Covel",
                                 "payload": "ADD:COVEL"
                             }
                         ]
