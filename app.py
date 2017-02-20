@@ -106,7 +106,7 @@ def handle_payload(uid, payload):
             fb.send_message(uid, fb.init_location())
         elif value == "DONE":
             usr = incomplete_data[uid]
-
+            log("USR {uid} State when done: {usr}".format(uid=uid, usr=usr))
             # user gave complete data
             if "when" in usr and "where" in usr and "buyer" in usr:
                 # add object to complete dict
@@ -114,6 +114,7 @@ def handle_payload(uid, payload):
                 del incomplete_data[uid]
 
                 fb.send_message(uid, fb.setup_str("Great! I will try my best to match you and let you know if I find someone!"))
+                log("Added USR {uid} to complete data db".format(uid=uid))
                 log(complete_data)
 
             else:
