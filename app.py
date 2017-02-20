@@ -1,10 +1,12 @@
 import os
-import sys
 import json
 
 import requests
 from flask import Flask, request
 from collections import defaultdict
+
+from util import log
+import messenger_interface as fb
 
 app = Flask(__name__)
 
@@ -44,7 +46,6 @@ def webhook():
     log(data)
 
     if data["object"] == "page":
-
         for entry in data["entry"]:
             for messaging_event in entry["messaging"]:
 
@@ -53,21 +54,23 @@ def webhook():
                 # the recipient's ID, which should be your page's facebook ID
                 recipient_id = messaging_event["recipient"]["id"]
 
-                if messaging_event.get("message"):  # someone sent us a message
+                # someone sent us a message
+                if messaging_event.get("message"):
                     # skip message if its an emoji
                     if "text" not in messaging_event["message"]:
                         continue
+
                     message_text = messaging_event["message"]["text"]  # the message's text
 
                     # TODO: temporarily starts data request save on begin msg send
                     #       change to on "get started" button press instead later
                     if message_text.lower() == "begin":
-                        init_user(sender_id)
+                        fb.send_message(sender_id, fb.init_user())
                     else:
-                        obj = {"text": "Got a message!"}
-                        send_message(sender_id, obj)
+                        fb.send_message(sender_id, fb.setup_str("Got a message!"))
 
-                if messaging_event.get("postback"):  # user clicked/tapped "postback" button in earlier message
+                # user clicked/tapped "postback" button in earlier message
+                if messaging_event.get("postback"):
                     payload = messaging_event["postback"]["payload"]
                     handle_payload(sender_id, payload)
 
@@ -84,149 +87,52 @@ def handle_payload(uid, payload):
 
     action, value = payload.split(":")
 
-    if action == "init":
-        log("Handle Init with payload: {load}".format(load=payload))
-        handle_init(uid, value)
-    elif action == "set":
-        log("TODO: implement setting finalized data")
+    if action == "ADD":
+        add_hall(uid, value)
+
+    elif action == "BUYER":
+        incomplete_data[uid]["buyer"] = (value == "buyer")
+        log("USER: {id}, was set as a {buyer}".format(id=uid, buyer=value))
+
+        # if we have no dining hall data
+        if "where" not in incomplete_data[uid]:
+            fb.send_message(self.my_uid, fb.init_location())
+
+    # TODO: Convert to NLP to prompt user for time data
+    elif action == "BEGIN":
+        set_begin(uid, int(value))
+    elif action == "END":
+        set_end(uid, int(value))
+
+    # use this postback action to resend prompts
+    elif action == "GOTO":
+        if value == "TIME":
+            fb.send_message(sender_id, fb.setup_str("TODO: Ask for time"))
+        elif value == "HALL":
+            fb.send_message(self.my_uid, fb.init_location())
+
     else:
         log("Received unhandled payload: {load}".format(load=payload))
 
-# handles initializing incomplete data in init flow
-def handle_init(uid, value):
-    if value == "buyer" or value == "seller":
-        incomplete_data[uid]["buyer"] = (value == "buyer")
-        init_location(uid)
 
-    elif value in dining_halls:
-        if "where" in incomplete_data[uid]:
+# TODO: Replace these functions and the global objects with a proper database
+def add_hall(uid, hall):
+    log("Adding {hall} to user {uid}".format(hall=hall, id=uid))
+
+    if "where" in incomplete_data[uid]:
             incomplete_data[uid]["where"].add(value)
 
-        # no locations set yet
-        else:
-            incomplete_data[uid]["where"] = set([value])
-
-        if len(incomplete_data[uid]["where"]) == 4:
-            log("User has all dining halls set")
-
+    # no locations set yet
     else:
-        #TODO: Handle storing when
-        print "TODO: store when"
-    log(incomplete_data)
+        incomplete_data[uid]["where"] = set([value])
 
-# sends a templated question to recipient asking if buyer or seller
-def init_user(recipient_id):
-    log("init:buyer from {recipient}".format(recipient=recipient_id))
+# TODO
+def set_begin(uid, begin):
+    pass
 
-    message_obj = {
-        "attachment": {
-            "type": "template",
-            "payload": {
-                "template_type":"generic",
-                "elements":[
-                    {
-                        "title": "Let's get started!",
-                        "subtitle": "Are you a buyer or a seller?",
-                        "buttons":
-                        [
-                            {
-                                "type": "postback",
-                                "title": "Buyer",
-                                "payload": "init:buyer"
-                            },{
-                                "type": "postback",
-                                "title": "Seller",
-                                "payload": "init:seller"
-                            }
-                        ]
-                    }
-                ]
-            }
-        }
-    }
-
-    send_message(recipient_id, message_obj)
-
-# sends a templated question to recipient asking for which dining halls they prefer
-def init_location(recipient_id):
-    log("init:location from {recipient}".format(recipient=recipient_id))
-
-    message_obj = {
-        "attachment": {
-            "type": "template",
-            "payload": {
-                "template_type":"generic",
-                "elements":[
-                    {
-                        "title": "Which dining halls are you buying/selling at? (swipe right)",
-                        "buttons":
-                        [
-                            {
-                                "type": "postback",
-                                "title": "Bruin Plate",
-                                "payload": "init:bplate"
-                            },{
-                                "type": "postback",
-                                "title": "Feast",
-                                "payload": "init:feast"
-                            },{
-                                "type": "postback",
-                                "title": "De Neve",
-                                "payload": "init:deneve"
-                            }
-                        ]
-
-                    },{
-                        "title": "Which dining halls are you buying/selling at?",
-                        "buttons":
-                        [
-                            {
-                                "type": "postback",
-                                "title": "Covel",
-                                "payload": "init:covel"
-                            },{
-                                "type": "postback",
-                                "title": "Bruin Cafe",
-                                "payload": "init:bcafe"
-                            },{
-                                "type": "postback",
-                                "title": "Cafe 1919",
-                                "payload": "init:1919"
-                            }
-                        ]
-                    }
-                ]
-            }
-        }
-    }
-
-    send_message(recipient_id, message_obj)
-
-def send_message(recipient_id, message_obj):
-
-    log("sending message to {recipient}".format(recipient=recipient_id))
-
-    params = {
-        "access_token": os.environ["PAGE_ACCESS_TOKEN"]
-    }
-    headers = {
-        "Content-Type": "application/json"
-    }
-    data = json.dumps({
-        "recipient": {
-            "id": recipient_id
-        },
-        "message": message_obj
-    })
-    r = requests.post("https://graph.facebook.com/v2.6/me/messages", params=params, headers=headers, data=data)
-    if r.status_code != 200:
-        log(r.status_code)
-        log(r.text)
-
-# simple wrapper for logging to stdout on heroku
-def log(message):
-    print str(message)
-    sys.stdout.flush()
+# TODO
+def set_end(uid, end):
+    pass
 
 if __name__ == '__main__':
     app.run(debug=True)
