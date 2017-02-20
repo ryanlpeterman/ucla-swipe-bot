@@ -103,7 +103,7 @@ def handle_payload(uid, payload):
     # use this postback action to resend prompts
     elif action == "GOTO":
         if value == "TIME":
-            fb.send_message(uid, fb.setup_str("TODO: Ask for time"))
+            fb.send_message(uid, fb.setup_time())
         elif value == "HALL":
             fb.send_message(uid, fb.init_location())
 
