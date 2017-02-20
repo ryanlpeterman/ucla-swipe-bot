@@ -117,14 +117,14 @@ def handle_payload(uid, payload):
 
 # TODO: Replace these functions and the global objects with a proper database
 def add_hall(uid, hall):
-    log("Adding {hall} to user {uid}".format(hall=hall, id=uid))
+    log("Adding {hall} to user {id}".format(hall=hall, id=uid))
 
     if "where" in incomplete_data[uid]:
-            incomplete_data[uid]["where"].add(value)
+        incomplete_data[uid]["where"].add(hall)
 
     # no locations set yet
     else:
-        incomplete_data[uid]["where"] = set([value])
+        incomplete_data[uid]["where"] = set([hall])
 
 # TODO
 def set_begin(uid, begin):
