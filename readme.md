@@ -17,6 +17,7 @@ If the confidence in figuring out what post's data is too low, we can manually a
 
 
 ## File Descriptions:
+```
 ├── app.py (main event code)
 ├── messenger_interface.py (messenger api functions bundled)
 ├── Procfile (for Heroku app setup)
@@ -25,6 +26,7 @@ If the confidence in figuring out what post's data is too low, we can manually a
 ├── test.py (all unit tests)
 ├── test.sh (helper script to add messenger API token to env variables)
 └── util.py (various utility functions)
+```
 
 ## Important Commands:
 To run locally:
