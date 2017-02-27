@@ -43,6 +43,7 @@ To deploy:
 
 ## TODO (high level):
 1. Database - after preliminary research python's TinyDB should do the trick and not add any dependencies
-2. Matching Algorithm - I envisioned a tree/bucket type of matching which can match each new buyer/seller in O(1)
-3. Recommendations - If market has no buyers, message people who have previously bought at these prices
-4. Metrics/Data Analytics - tracking avg buy/sell price, best times to buy/sell
+2. Scraping - parsing and determining data from unstructured posts in the UCLA SwipeSwap page
+3. Matching Algorithm - I envisioned a tree/bucket type of matching which can match each new buyer/seller in O(1)
+4. Recommendations - If market has no buyers, message people who have previously bought at these prices
+5. Metrics/Data Analytics - tracking avg buy/sell price, best times to buy/sell
