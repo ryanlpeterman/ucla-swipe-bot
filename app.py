@@ -1,6 +1,14 @@
 import os
 import json
 
+import time
+import atexit
+import facebook_scraper
+
+from apscheduler.schedulers.background import BackgroundScheduler
+from apscheduler.triggers.interval import IntervalTrigger
+
+
 import requests
 from flask import Flask, request
 from collections import defaultdict
@@ -9,6 +17,21 @@ from util import log
 import messenger_interface as fb
 
 app = Flask(__name__)
+
+# The scheduler will only start after the first request. We need to include this
+# because the debugger will naturally run two instances and this way we will
+# only run one.
+@app.before_first_request
+def initialize():
+    scheduler = BackgroundScheduler()
+    scheduler.start()
+    scheduler.add_job(
+        func=facebook_scraper.test_func,
+        trigger=IntervalTrigger(seconds=5),
+        id='scraping_job',
+        name='Scraping the Facebook page every few hours',
+        replace_existing=True)
+    atexit.register(lambda: scheduler.shutdown())
 
 # User Data Structure:
 # { user_id:
