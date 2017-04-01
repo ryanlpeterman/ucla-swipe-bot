@@ -5,8 +5,8 @@ import requests
 from flask import Flask, request
 from collections import defaultdict
 
-from util import lo
-gimport messenger_interface as fb
+from util import log
+import messenger_interface as fb
 
 app = Flask(__name__)
 
