@@ -7,6 +7,7 @@ from collections import defaultdict
 
 from util import log
 import messenger_interface as fb
+import database as db
 
 app = Flask(__name__)
 
