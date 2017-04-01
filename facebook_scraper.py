@@ -3,12 +3,15 @@ import json
 import datetime
 import csv
 import time
+import app
 
 def test_func():
     # Need to acquire a more lasting access token
     access_token = "EAAP7YKc9WqsBAGxS8GZCihlqy6NS2yeZCONKyXcwgPB3sa7tlhd8fkOF0Ep5oteD23iWANYuStmr2FrVDWKVbtt0SxpTuSRsMfQwcjk5T9qSfWVQfGapdNWGFJqYW2Wy8759tfRnHB3rJbhBpVsVOLaEkTEZBkZD"
     group_id = '478176852260001'
-    scrapeFacebookGroupFeedData(group_id, access_token)
+    new_JSON_batch_posts = scrapeFacebookGroupFeedData(group_id, access_token)
+    # continue analyzing
+    # make a call to handle_payload in app.py
 
 def request_until_succeed(url):
     req = urllib2.Request(url)
@@ -40,8 +43,8 @@ def scrapeFacebookGroupFeedData(group_id, access_token):
 
     # retrieve data
     data = json.loads(request_until_succeed(url))
-
     print json.dumps(data, indent=4, sort_keys=True)
+    return json.dumps(data, indent=4, sort_keys=True)
 
 if __name__ == '__main__':
     scrapeFacebookGroupFeedData(group_id, access_token)
