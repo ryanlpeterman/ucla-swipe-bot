@@ -9,7 +9,7 @@ def test_func():
     # Need to acquire a more lasting access token
     access_token = "EAAP7YKc9WqsBAGxS8GZCihlqy6NS2yeZCONKyXcwgPB3sa7tlhd8fkOF0Ep5oteD23iWANYuStmr2FrVDWKVbtt0SxpTuSRsMfQwcjk5T9qSfWVQfGapdNWGFJqYW2Wy8759tfRnHB3rJbhBpVsVOLaEkTEZBkZD"
     group_id = '478176852260001'
-    new_JSON_batch_posts = scrapeFacebookGroupFeedData(group_id, access_token)
+    new_JSON_posts = scrapeFacebookGroupFeedData(group_id, access_token)
     # continue analyzing
     # make a call to handle_payload in app.py
 
