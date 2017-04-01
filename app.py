@@ -36,15 +36,10 @@ def initialize():
 # User Data Structure:
 # { user_id:
 #   { "buyer": bool, - False = seller
-#     "when" : set(1, 2, 3) - contains each hour in military time that they are buying
-#     "where": set("bplate", "deneve", "covel", "feast") - contains one or more dining halls
+#     "when" : list(1, 2, 3) - contains each hour in military time that they are buying
+#     "where": list("bplate", "deneve", "covel", "feast") - contains one or more dining halls
 #   }
 # }
-
-# User has not filled out all fields yet
-incomplete_data = defaultdict(dict)
-# User has fully filled out fields and we can match on this data
-final_data = defaultdict(dict)
 
 @app.route('/', methods=['GET'])
 def verify():
@@ -106,20 +101,21 @@ def handle_payload(uid, payload):
     log("Received postback payload from {id}: {load}".format(id=uid, load=payload))
 
     action, value = payload.split(":")
+    usr = db.get_user_obj(uid)
 
     if action == "HALL":
-        add_hall(uid, value)
+        db.add_hall(uid, value)
 
     elif action == "BUYER":
-        set_buyer(uid, value)
+        db.set_buyer(uid, value == 'buyer')
 
         # if we have no dining hall data
-        if "where" not in incomplete_data[uid]:
+        if "where" not in usr:
             fb.send_message(uid, fb.init_location())
 
     # TODO: Convert to NLP to prompt user for time data
     elif action == "TIME":
-        add_time(uid, int(value))
+        db.add_time(uid, int(value))
 
     # use this postback action to resend prompts
     elif action == "GOTO":
@@ -128,17 +124,13 @@ def handle_payload(uid, payload):
         elif value == "HALL":
             fb.send_message(uid, fb.init_location())
         elif value == "DONE":
-            usr = incomplete_data[uid]
+
             log("USR {uid} State when done: {usr}".format(uid=uid, usr=usr))
             # user gave complete data
-            if "when" in usr and "where" in usr and "buyer" in usr:
-                # add object to complete dict
-                complete_data[uid] = incomplete_data[uid]
-                del incomplete_data[uid]
-
+            if db.is_user_complete(uid):
+                # TODO place user somewhere to begin matching
                 fb.send_message(uid, fb.setup_str("Great! I will try my best to match you and let you know if I find someone!"))
                 log("Added USR {uid} to complete data db".format(uid=uid))
-                log(complete_data)
 
             else:
                 fb.send_message(uid, fb.setup_str("I don't have the complete information necessary to match you, please fill out the following forms"))
@@ -152,35 +144,6 @@ def handle_payload(uid, payload):
 
     else:
         log("Received unhandled payload: {load}".format(load=payload))
-
-# TODO: Replace these functions and the global objects with a proper database
-def is_user_complete(uid):
-    usr = incomplete_data[uid]
-    return ()
-
-def set_buyer(uid, buyer_str):
-    incomplete_data[uid]["buyer"] = (buyer_str == "buyer")
-    log("USER: {id} was set to {buyer}".format(id=uid, buyer=buyer_str))
-
-def add_hall(uid, hall):
-    if "where" in incomplete_data[uid]:
-        incomplete_data[uid]["where"].add(hall)
-
-    # no locations set yet
-    else:
-        incomplete_data[uid]["where"] = set([hall])
-
-    log("Added location {hall} to user {id}".format(hall=hall, id=uid))
-
-def add_time(uid, hour):
-    if "when" in incomplete_data[uid]:
-        incomplete_data[uid]["when"].add(hour)
-
-    # no locations set yet
-    else:
-        incomplete_data[uid]["when"] = set([hour])
-
-    log("Added time {hour} to user {id}".format(hour=hour, id=uid))
 
 if __name__ == '__main__':
     app.run(debug=True)
