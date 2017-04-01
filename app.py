@@ -117,7 +117,7 @@ def handle_payload(uid, payload):
                     fb.send_message(uid, fb.init_location())
                 if "when" not in usr:
                     fb.send_message(uid, fb.setup_time())
-                if "buyer" not in usr:
+                if "is_buyer" not in usr:
                     fb.send_message(uid, fb.init_user())
 
     else:
