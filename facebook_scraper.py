@@ -6,7 +6,7 @@ import time
 
 def test_func():
     # Need to acquire a more lasting access token
-    access_token = "EAACEdEose0cBAGAPj0iEXkIp9HlyHEZA9FVcwodX9tgvuIIud6fv2xmp2yHAMATZCSTM3xZBaeoWfWmS5qi4C78CZCy7sYc1YEorBZCqS9FRqWuvihunvMoOMXg0PB2PBZAr53neUJOMrH0ob2Q4IcrTaD0OzOUZBITVYhodV1txYL4LZCOeEsb4ls5MoJDD1aMZD"
+    access_token = "EAAP7YKc9WqsBAGxS8GZCihlqy6NS2yeZCONKyXcwgPB3sa7tlhd8fkOF0Ep5oteD23iWANYuStmr2FrVDWKVbtt0SxpTuSRsMfQwcjk5T9qSfWVQfGapdNWGFJqYW2Wy8759tfRnHB3rJbhBpVsVOLaEkTEZBkZD"
     group_id = '478176852260001'
     scrapeFacebookGroupFeedData(group_id, access_token)
 
