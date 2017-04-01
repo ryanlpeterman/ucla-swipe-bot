@@ -5,8 +5,9 @@ import csv
 import time
 
 def test_func():
-    # Need to acquire a more lasting access token
+    # 60 day access token, need to figure out long-term solution
     access_token = "EAAP7YKc9WqsBAGxS8GZCihlqy6NS2yeZCONKyXcwgPB3sa7tlhd8fkOF0Ep5oteD23iWANYuStmr2FrVDWKVbtt0SxpTuSRsMfQwcjk5T9qSfWVQfGapdNWGFJqYW2Wy8759tfRnHB3rJbhBpVsVOLaEkTEZBkZD"
+    # SwipeSwap Group ID Number
     group_id = '478176852260001'
     scrapeFacebookGroupFeedData(group_id, access_token)
 
