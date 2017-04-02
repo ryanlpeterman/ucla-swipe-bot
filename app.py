@@ -130,9 +130,12 @@ def handle_payload(uid, payload):
             # user gave complete data
             if db.is_user_complete(uid):
                 matches = match.add_complete_user(usr)
-                fb.send_message(uid, fb.setup_str("Great! I will try my best to match you and let you know if I find someone!"))
                 log("Added USR {uid} to complete data db".format(uid=uid))
 
+                if not matches:
+                    fb.send_message(uid, fb.setup_str("Great! I will try my best to match you and let you know if I find someone!"))
+                else:
+                    fb.send_message(uid, fb.setup_str(str(matches)))
             else:
                 fb.send_message(uid, fb.setup_str("I don't have the complete information necessary to match you, please fill out the following forms"))
 
