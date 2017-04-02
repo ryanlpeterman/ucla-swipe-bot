@@ -50,6 +50,13 @@ def preprocess_request(request):
 	# print r.text
 	return data
 
+def populate_null(data):
+	if data['where'] == None:
+		data['where'] = ['Deneve', 'Bplate', 'Covel','Feast', 'Bcafe']
+	if data['when'] == None:
+		data['when'] = [8,9,10,11,12,1,2,5,6,7]
+	return data
+
 def postprocess_request(data, price, name, idnum):
 	user_values = {'uid': name, 'where': [], 'when': [], 'is_buyer': None, 'price': price, 'idnum': idnum}
 
@@ -68,7 +75,7 @@ def postprocess_request(data, price, name, idnum):
 		user_values['is_buyer'] = True
 	user_values['is_buyer'] = False
 
-	return user_values
+	return populate_null(user_values)
 
 #Wrapper function that does everything
 def process_language(name, message, idnum):
