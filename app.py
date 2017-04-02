@@ -16,6 +16,7 @@ from collections import defaultdict
 from util import log
 import messenger_interface as fb
 import database as db
+import match
 
 app = Flask(__name__)
 
@@ -125,11 +126,10 @@ def handle_payload(uid, payload):
         elif value == "HALL":
             fb.send_message(uid, fb.init_location())
         elif value == "DONE":
-
             log("USR {uid} State when done: {usr}".format(uid=uid, usr=usr))
             # user gave complete data
             if db.is_user_complete(uid):
-                # TODO place user somewhere to begin matching
+                matches = match.add_complete_user(usr)
                 fb.send_message(uid, fb.setup_str("Great! I will try my best to match you and let you know if I find someone!"))
                 log("Added USR {uid} to complete data db".format(uid=uid))
 
@@ -147,4 +147,5 @@ def handle_payload(uid, payload):
         log("Received unhandled payload: {load}".format(load=payload))
 
 if __name__ == '__main__':
+    match.init()
     app.run(debug=True)
