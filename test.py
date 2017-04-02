@@ -1,6 +1,7 @@
 import unittest
 import messenger_interface as fb
 import database as db
+import match as m
 from subprocess import call
 
 class TestMessengerInterface(unittest.TestCase):
@@ -79,6 +80,16 @@ class TestDatabase(unittest.TestCase):
         db.set_buyer(1234, True)
         self.assertEqual(db.is_user_complete(1234), True)
 
+class TestMatch(unittest.TestCase):
+    def test_matching(self):
+        m.init()
+        usr1 = {'id':1234, 'where':['BPLATE', 'DENEVE'], 'when':[8], 'is_buyer':False, 'price':7}
+        res1 = m.add_complete_user(usr1)
+        self.assertEqual([], res1)
+
+        usr2 = {'id':6969, 'where':['BPLATE'], 'when':[8], 'is_buyer':True, 'price':7}
+        res2 = m.add_complete_user(usr2)
+        self.assertEqual([(1234, 6969, 'BPLATE', 8, 7)], res2)
 
 if __name__ == '__main__':
     unittest.main()
