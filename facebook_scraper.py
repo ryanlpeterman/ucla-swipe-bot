@@ -22,7 +22,7 @@ def test_func():
                 name = value['name']
             if attribute == "message":
                 message = value
-        list_of_posts.append( (name, message) )
+        list_of_extracted_data.append( (name, message) )
         print "\nName: " + name + "\nMessage: " + message
     #for element in list_of_extracted_data:
         #print element[0], element[1]
