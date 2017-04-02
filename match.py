@@ -1,4 +1,3 @@
-from tinydb import TinyDB, Query
 from util import log
 from copy import deepcopy
 

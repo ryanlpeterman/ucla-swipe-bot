@@ -17,6 +17,9 @@ from util import log
 import messenger_interface as fb
 import database as db
 
+#########################################################
+################### MATCH CODE BEGIN ####################
+#########################################################
 from copy import deepcopy
 
 # 2 possible is_buying
@@ -81,6 +84,9 @@ def add_complete_user(usr):
 
     return matches
 
+#########################################################
+##################### MATCH CODE END ####################
+#########################################################
 
 init()
 app = Flask(__name__)
