@@ -23,8 +23,10 @@ def test_func():
             if attribute == "message":
                 message = value
         list_of_extracted_data.append( (name, message) )
-        print "\nName: " + name + "\nMessage: " + message
-    #for element in list_of_extracted_data:
+        # print "\nName: " + name + "\nMessage: " + message
+    for element in list_of_extracted_data:
+        final_post_data_dict = language.process_language(element[0], element[1])
+        print final_post_data_dict
         #print element[0], element[1]
     # make a call to handle_payload in app.py
 
@@ -58,7 +60,7 @@ def scrapeFacebookGroupFeedData(group_id, access_token):
 
     # retrieve data
     data = json.loads(request_until_succeed(url))
-    print json.dumps(data, indent=4, sort_keys=True)
+    # print json.dumps(data, indent=4, sort_keys=True)
     return data
 
 if __name__ == '__main__':
