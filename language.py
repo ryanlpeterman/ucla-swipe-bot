@@ -50,9 +50,9 @@ def preprocess_request(request):
 	# print r.text
 	return data
 
-def postprocess_request(data, price, name):
-	user_values = {'uid': name, 'where': [], 'when': [], 'is_buyer': None, 'price': price}
-
+def postprocess_request(data, price, name, idnum):
+	user_values = {'uid': name, 'where': [], 'when': [], 'is_buyer': None, 'price': price, 'idnum': idnum}
+	
 
 	for entity in data['entities']:
 		if entity['type'] == 'hall' :
@@ -71,9 +71,9 @@ def postprocess_request(data, price, name):
 	return user_values
 
 #Wrapper function that does everything
-def process_language(name, message):
+def process_language(name, idnum, message):
 	newdata = preprocess_request(message)
-	return postprocess_request(newdata, get_dollar_amount(message), name)
+	return postprocess_request(newdata, get_dollar_amount(message), name, idnum)
 
 
 

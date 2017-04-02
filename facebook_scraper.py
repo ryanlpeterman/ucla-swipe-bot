@@ -27,7 +27,7 @@ def test_func():
         list_of_extracted_data.append( (name, message, uid) )
         # print "\nName: " + name + "\nMessage: " + message
     for element in list_of_extracted_data:
-        final_post_data_dict = language.process_language(element[0], element[1])
+        final_post_data_dict = language.process_language(element[0], element[1], element[2])
         print final_post_data_dict
         #print element[0], element[1]
     # make a call to handle_payload in app.py
