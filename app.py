@@ -26,13 +26,15 @@ app = Flask(__name__)
 # only run one.
 @app.before_first_request
 def initialize():
+    # Call it once first
+    facebook_scraper.test_func()
     scheduler = BackgroundScheduler()
     scheduler.start()
     scheduler.add_job(
         func=facebook_scraper.test_func,
-        trigger=IntervalTrigger(seconds=5),
+        trigger=IntervalTrigger(seconds=10),
         id='scraping_job',
-        name='Scraping the Facebook page every few hours',
+        name='Scraping the Facebook page every 10 seconds (change to 1 hour)',
         replace_existing=True)
     atexit.register(lambda: scheduler.shutdown())
 
