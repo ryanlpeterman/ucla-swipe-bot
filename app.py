@@ -17,6 +17,7 @@ from util import log
 import messenger_interface as fb
 import database as db
 
+init()
 app = Flask(__name__)
 
 # The scheduler will only start after the first request. We need to include this
@@ -128,7 +129,7 @@ def handle_payload(uid, payload):
             log("USR {uid} State when done: {usr}".format(uid=uid, usr=usr))
             # user gave complete data
             if db.is_user_complete(uid):
-                matches = match.add_complete_user(usr)
+                matches = add_complete_user(usr)
                 log("Added USR {uid} to complete data db".format(uid=uid))
 
                 if not matches:
@@ -149,7 +150,6 @@ def handle_payload(uid, payload):
         log("Received unhandled payload: {load}".format(load=payload))
 
 if __name__ == '__main__':
-    match.init()
     app.run(debug=True)
 
 
