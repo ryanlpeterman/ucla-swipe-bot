@@ -9,7 +9,7 @@ db = TinyDB('matchdb.json')
 # 2 possible is_buying
 buying = [True, False]
 # 4 possible dining halls
-dining_halls = ["DENEVE", "BPLATE", "FEAST", "COVEL"]
+dining_halls = ["deneve", "bplate", "feast", "covel"]
 # 6am - 9pm
 times = range(6, 21)
 # possible prices are up to $10
@@ -47,7 +47,7 @@ def add_complete_user(usr):
 		id: int representing their uid
 	}
 	"""
-	halls = usr["where"]
+	halls = [hall.lower() for hall in usr["where"]]
 	times = usr["when"]
 	is_buyer = usr["is_buyer"]
 	price = usr["price"]
