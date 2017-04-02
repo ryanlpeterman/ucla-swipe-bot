@@ -4,6 +4,7 @@ import json
 import time
 import atexit
 import facebook_scraper
+import language
 
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.triggers.interval import IntervalTrigger
@@ -26,13 +27,15 @@ app = Flask(__name__)
 # only run one.
 @app.before_first_request
 def initialize():
+    # Call it once first
+    facebook_scraper.test_func()
     scheduler = BackgroundScheduler()
     scheduler.start()
     scheduler.add_job(
         func=facebook_scraper.test_func,
-        trigger=IntervalTrigger(seconds=5),
+        trigger=IntervalTrigger(seconds=10),
         id='scraping_job',
-        name='Scraping the Facebook page every few hours',
+        name='Scraping the Facebook page every 10 seconds (change to 1 hour)',
         replace_existing=True)
     atexit.register(lambda: scheduler.shutdown())
 
@@ -81,9 +84,11 @@ def webhook():
 
                     message_text = messaging_event["message"]["text"]  # the message's text
 
-                    # TODO: HANSEN - message_text is the input message from the user
+                    processed_dict = process_language(messaging_event["sender"], message_text, sender_id)
+                    matches = m.add_complete_user(usr_dict)
+                    # TODO/DONE: message_text is the input message from the user
                     # call your function on it
-                    fb.send_message(sender_id, fb.setup_str("Hansen replace me bitch"))
+                    #fb.send_message(sender_id, fb.setup_str("Hansen replace me bitch"))
 
                     # here is an example of what we want
                     # usr_dict = nlpfunction(message_text)
