@@ -8,7 +8,7 @@ import language
 
 def test_func():
     # 60 day access token, need to figure out long-term solution
-    access_token = "EAACEdEose0cBAO80bNUePh8rWYLLfKT8Fnp946JUoT2qE6Sl9qsJt3FCxpociUojX8lo3bFRoN9PUM31UNIbvGZCq7gPFSPohHrImcD5yxEgBr0jkje82gn7IDkvvmmdGPEZCb7TPB1NlYzx1RTZAzyksBxLqviIA4bhsbqPr6ZCyJpO54G23czUhJO5cHUZD"
+    access_token = "EAACEdEose0cBAOvKzF2WNLgPpaZC8IetUoQKOz3nCTEhbCv5S1EqxlzL3R2BVByEvTXhugZBQPh6ZBkVWlxJaeDTPHYpcR8o69SCU2P5Cax5DzY3ZCX2d0DRxwbjaBuk8xOkbDfdIdZBSWBOwyHJT2XbFJZBb4IZCGHfcch0R89K0vcsVA5oMTLzZA95mJstlQQZD"
     # SwipeSwap Group ID Number
     group_id = '478176852260001'
     new_JSON_posts = scrapeFacebookGroupFeedData(group_id, access_token)
@@ -16,13 +16,15 @@ def test_func():
     list_of_posts = new_JSON_posts['data']
     for post in list_of_posts:
         name = ""
+        uid = ""
         message = ""
         for attribute, value in post.iteritems():
             if attribute == "from":
+                uid = value['id']
                 name = value['name']
             if attribute == "message":
                 message = value
-        list_of_extracted_data.append( (name, message) )
+        list_of_extracted_data.append( (name, message, uid) )
         # print "\nName: " + name + "\nMessage: " + message
     for element in list_of_extracted_data:
         final_post_data_dict = language.process_language(element[0], element[1])
