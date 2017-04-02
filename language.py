@@ -47,7 +47,7 @@ def preprocess_request(request):
 	r = requests.get("https://westus.api.cognitive.microsoft.com/luis/v2.0/apps/44e06472-8cbc-457a-9dd2-4f004d1e5445?subscription-key=e651ca2086fb4327a391bc3f82fe7c81&timezoneOffset=0.0&verbose=true", params=data)
 
 	data = json.loads(r.text)
-	print r.text
+	#print r.text
 	return data
 
 def postprocess_request(data, price, name):
