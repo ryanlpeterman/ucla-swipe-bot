@@ -4,6 +4,7 @@ import json
 import time
 import atexit
 import facebook_scraper
+import language
 
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.triggers.interval import IntervalTrigger
@@ -83,9 +84,11 @@ def webhook():
 
                     message_text = messaging_event["message"]["text"]  # the message's text
 
-                    # TODO: HANSEN - message_text is the input message from the user
+                    processed_dict = process_language(messaging_event["sender"], message_text, sender_id)
+                    matches = m.add_complete_user(usr_dict)
+                    # TODO/DONE: message_text is the input message from the user
                     # call your function on it
-                    fb.send_message(sender_id, fb.setup_str("Hansen replace me bitch"))
+                    #fb.send_message(sender_id, fb.setup_str("Hansen replace me bitch"))
 
                     # here is an example of what we want
                     # usr_dict = nlpfunction(message_text)
